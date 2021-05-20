@@ -20,7 +20,7 @@ root.geometry("400x400")
 
 
 #####################################################
-#DATABASE
+#OPERACIONES EN DATABASE
 
 #Crear base de datos y conectarse (se corre solo una vez)
 conn = sqlite3.connect("db1.db")
@@ -39,6 +39,28 @@ city text,
 state text,
 zip text ) """)
 '''
+
+#Create function to delete a record
+def delete():
+    #Connect database
+    conn = sqlite3.connect("db1.db")
+    #create cursor
+    c = conn.cursor()
+
+    #Instruccion SQL
+    c.execute("DELETE FROM adresses WHERE oid= PLACEHOLDER")
+
+
+    #Commit changes
+    conn.commit()
+
+    #Cerrar conexion base datos
+    conn.close()
+
+
+
+
+
 
 #Crear función para insertar a DB
 def submit():
@@ -79,16 +101,35 @@ def submit():
 
 #Crear funcion consulta
 def query():
-    '''c.execute("SELECT *, FROM adresses
-    ")'''
+    #Connect database
+    conn = sqlite3.connect("db1.db")
+    #create cursor
+    c = conn.cursor()
+
+    #Instruccion SQL
+    c.execute("SELECT *, oid FROM adresses")
+    records = c.fetchall()  #fetchone / fetchmany(50)
+    #print(records)
+
+    #Loop thru result
+    print_records=""
+    for record in records:
+        print_records += str(record[1]) + " " + str(record[2]) + "\n"
+
+    query_label = Label(root, text= print_records)
+    query_label.grid(row=8, column= 0, columnspan=2)
     return
 
-'''
+
     #Commit changes
     conn.commit()
 
     #Cerrar conexion base datos
-    conn.close()'''
+    conn.close()
+
+
+
+
 
 ############################################################
 
@@ -103,7 +144,7 @@ conn.close()
 #Ventana Root - Crear textbox input
 
 f_name = Entry(root, width=30)
-f_name.grid(row=0, column=1, padx=20)
+f_name.grid(row=0, column=1, padx=20, pady = (20,0))
 
 l_name = Entry(root, width=30)
 l_name.grid(row=1, column=1)
@@ -120,10 +161,15 @@ state.grid(row=4, column=1)
 zip = Entry(root, width=30)
 zip.grid(row=5, column=1)
 
+#delete
+
+
+
+
 
 #Ventana Root - Crear etiquetas
 f_name_label = Label(root, text="First Name")
-f_name_label.grid(row=0, column=0 )
+f_name_label.grid(row=0, column=0, padx = 10, pady = (20,0) )
 
 
 l_name_label = Label(root, text="Last Name")
@@ -144,12 +190,16 @@ zip_label.grid(row=5, column=0 )
 # Ventana Root - Crear botones
 #Boton Enviar
 submit_btn = Button(root, text="Add record to Database", command=submit) 
-submit_btn.grid(row=6, column=0, columnspan = 2, pady = 10, padx= 10, ipadx = 100)
+submit_btn.grid(row=6, column=0, columnspan = 2, pady = (20,5), padx= 10, ipadx=100)
 
 
-#Boton Imprimir en Ventana - Query Boton
+#Boton Query
 query_btn = Button(root, text="Show Records", command=query) 
-query_btn.grid(row=11, column=0, columnspan = 2, pady = 10, padx= 10, ipadx = 100)
+query_btn.grid(row=7, column=0, columnspan = 2, pady = 10, padx= 10, ipadx= 125)
+
+#Boton Delete
+delete_btn = Button(root, text="Delete Record", command=delete) 
+delete_btn.grid(row=9, column=0, columnspan = 2, pady = 10, padx= 10, ipadx=125)
 
 
 #####################################################
