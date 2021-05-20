@@ -48,8 +48,13 @@ def delete():
     c = conn.cursor()
 
     #Instruccion SQL
-    c.execute("DELETE FROM adresses WHERE oid= PLACEHOLDER")
-
+    #c.execute("DELETE FROM adresses WHERE oid= PLACEHOLDER")
+    c.execute("DELETE FROM adresses WHERE oid = " + delete_box.get())
+    
+    
+    
+    #Borrar campo
+    delete_box.delete(0,END)
 
     #Commit changes
     conn.commit()
@@ -114,7 +119,8 @@ def query():
     #Loop thru result
     print_records=""
     for record in records:
-        print_records += str(record[1]) + " " + str(record[2]) + "\n"
+        print_records += str(record[1]) + " " + str(record[2]) + " " + str(record[3]) +  " " + str(record[6]) +"\n"
+       # print_records += str(record[0]) + " " + str(record[1]) +  " " + str(record[3]) + " " + str(record[4] + "\n"
 
     query_label = Label(root, text= print_records)
     query_label.grid(row=8, column= 0, columnspan=2)
@@ -127,6 +133,12 @@ def query():
     #Cerrar conexion base datos
     conn.close()
 
+
+
+
+#Crear función de actualizar registro
+def edit():
+    return
 
 
 
@@ -161,7 +173,10 @@ state.grid(row=4, column=1)
 zip = Entry(root, width=30)
 zip.grid(row=5, column=1)
 
-#delete
+delete_box = Entry(root, width=30)
+delete_box.grid(row=9, column=1, pady= 5)
+
+
 
 
 
@@ -187,6 +202,9 @@ state_label.grid(row=4, column=0 )
 zip_label = Label(root, text="Zip")
 zip_label.grid(row=5, column=0 )
 
+delete_label = Label(root, text= "Select ID", pady = 5)
+delete_label.grid(row=9, column=0)
+
 # Ventana Root - Crear botones
 #Boton Enviar
 submit_btn = Button(root, text="Add record to Database", command=submit) 
@@ -199,7 +217,11 @@ query_btn.grid(row=7, column=0, columnspan = 2, pady = 10, padx= 10, ipadx= 125)
 
 #Boton Delete
 delete_btn = Button(root, text="Delete Record", command=delete) 
-delete_btn.grid(row=9, column=0, columnspan = 2, pady = 10, padx= 10, ipadx=125)
+delete_btn.grid(row=10, column=0, columnspan = 2, pady = 10, padx= 10, ipadx=125)
+
+#Boton Edit
+edit_btn = Button(root, text="Edit Record", command=edit) 
+edit_btn.grid(row=11, column=0, columnspan = 2, pady = 10, padx= 10, ipadx=131)
 
 
 #####################################################
