@@ -40,6 +40,96 @@ state text,
 zip text ) """)
 '''
 
+
+
+#Crear función de actualizar registro
+def edit():
+    #Crear ventana edición
+    #Ventana edición
+    editor = Tk()
+    editor.title("Update a Record")
+    editor.iconbitmap("icon.ico")
+    editor.geometry("400x400")
+
+
+    #Connect database
+    conn = sqlite3.connect("db1.db")
+    #create cursor
+    c = conn.cursor()
+
+    
+    #Instruccion SQL
+    record_id = delete_box.get()
+
+    c.execute("SELECT * FROM adresses WHERE oid = "+ record_id)
+    records = c.fetchall()
+
+    
+
+
+    #Ventana Editor - Crear textbox input
+
+    f_name_editor = Entry(editor, width=30)
+    f_name_editor.grid(row=0, column=1, padx=20, pady = (20,0))
+
+    l_name_editor = Entry(editor, width=30)
+    l_name_editor.grid(row=1, column=1)
+
+    address_editor = Entry(editor, width=30)
+    address_editor.grid(row=2, column=1)
+
+    city_editor = Entry(editor, width=30)
+    city_editor.grid(row=3, column=1)
+
+    state_editor = Entry(editor, width=30)
+    state_editor.grid(row=4, column=1)
+
+    zip_editor = Entry(editor, width=30)
+    zip_editor.grid(row=5, column=1)
+
+    #Ventana Editor - Crear etiquetas
+    f_name_label_editor = Label(editor, text="First Name")
+    f_name_label_editor.grid(row=0, column=0, padx = 10, pady = (20,0) )
+
+
+    l_name_label_editor = Label(editor, text="Last Name")
+    l_name_label_editor.grid(row=1, column=0 )
+
+    address_label_editor = Label(editor, text="Address")
+    address_label_editor.grid(row=2, column=0 )
+
+    city_label_editor = Label(editor, text="City")
+    city_label_editor.grid(row=3, column=0 )
+
+    state_label_editor = Label(editor, text="State")
+    state_label_editor.grid(row=4, column=0 )
+
+    zip_label_editor = Label(editor, text="Zip")
+    zip_label_editor.grid(row=5, column=0 )
+
+
+    #Loop thru result
+    for record in records:
+        f_name_editor.insert(0, record[0])
+        l_name_editor.insert(0, record[1])
+        address_editor.insert(0, record[2])
+        city_editor.insert(0, record[3])
+        state_editor.insert(0, record[4])
+        zip_editor.insert(0, record[5])
+
+
+    #Create a Save Button to save edited record
+    edit_btn = Button(editor, text="Save Record", command=edit) 
+    edit_btn.grid(row=6, column=0, columnspan = 2, pady = 10, padx= 10, ipadx=145)
+
+    #Commit changes
+    conn.commit()
+
+    #Cerrar conexion base datos
+    conn.close()
+
+
+
 #Create function to delete a record
 def delete():
     #Connect database
@@ -134,11 +224,6 @@ def query():
     conn.close()
 
 
-
-
-#Crear función de actualizar registro
-def edit():
-    return
 
 
 
