@@ -43,7 +43,62 @@ zip text ) """)
 
 
 #Crear función de actualizar registro
+def update():
+    #Connect database
+    conn = sqlite3.connect("db1.db")
+    #create cursor
+    c = conn.cursor()
+
+
+    record_id = delete_box.get()
+
+    #Instruccion SQL
+    c.execute(""" UPDATE adresses SET
+        first_name = :first,
+        last_name= :last,
+        adress = :adress,
+        city = :city,
+        state = :state,
+        zip = :zip
+
+        WHERE oid = :oid""",
+
+        {
+        'first': f_name_editor.get(),
+        'last': l_name_editor.get(),
+        'adress': address_editor.get(),
+        'city': city_editor.get(),
+        'state': state_editor.get(),
+        'zip': zip_editor.get(),
+        'oid' : record_id
+
+        }
+    
+    )
+
+
+    #Commit changes
+    conn.commit()
+
+    #Cerrar conexion base datos
+    conn.close()
+
+
+
+
+    #Limpiar contenido de inputs
+    f_name_editor.delete(0,END)
+    l_name_editor.delete(0,END)
+    address_editor.delete(0,END)
+    city_editor.delete(0,END)
+    state_editor.delete(0,END)
+    zip_editor.delete(0,END)
+
+
+    editor.destroy()
+
 def edit():
+    global editor
     #Crear ventana edición
     #Ventana edición
     editor = Tk()
@@ -64,8 +119,13 @@ def edit():
     c.execute("SELECT * FROM adresses WHERE oid = "+ record_id)
     records = c.fetchall()
 
-    
-
+    #Create a Global Variables for text box names
+    global f_name_editor
+    global l_name_editor
+    global address_editor
+    global city_editor
+    global state_editor
+    global zip_editor
 
     #Ventana Editor - Crear textbox input
 
@@ -119,7 +179,7 @@ def edit():
 
 
     #Create a Save Button to save edited record
-    edit_btn = Button(editor, text="Save Record", command=edit) 
+    edit_btn = Button(editor, text="Save Record", command=update) 
     edit_btn.grid(row=6, column=0, columnspan = 2, pady = 10, padx= 10, ipadx=145)
 
     #Commit changes
